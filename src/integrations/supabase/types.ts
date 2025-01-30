@@ -9,179 +9,94 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      contact_submissions: {
+      debts: {
         Row: {
-          created_at: string | null
-          email: string
+          amount: number
+          created_at: string
+          customer_name: string
+          due_date: string
           id: string
-          is_read: boolean | null
-          message: string
-          name: string
-          subject: string
-          user_id: string | null
+          status: string
+          user_id: string
         }
         Insert: {
-          created_at?: string | null
-          email: string
+          amount: number
+          created_at?: string
+          customer_name: string
+          due_date: string
           id?: string
-          is_read?: boolean | null
-          message: string
-          name: string
-          subject: string
-          user_id?: string | null
+          status: string
+          user_id: string
         }
         Update: {
-          created_at?: string | null
-          email?: string
+          amount?: number
+          created_at?: string
+          customer_name?: string
+          due_date?: string
           id?: string
-          is_read?: boolean | null
-          message?: string
-          name?: string
-          subject?: string
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "contact_submissions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      profiles: {
-        Row: {
-          avatar_url: string | null
-          bio: string
-          email: string
-          full_name: string
-          github_url: string | null
-          headline: string
-          id: string
-          linkedin_url: string | null
-          twitter_url: string | null
-          updated_at: string | null
-          website_url: string | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          bio: string
-          email: string
-          full_name: string
-          github_url?: string | null
-          headline: string
-          id?: string
-          linkedin_url?: string | null
-          twitter_url?: string | null
-          updated_at?: string | null
-          website_url?: string | null
-        }
-        Update: {
-          avatar_url?: string | null
-          bio?: string
-          email?: string
-          full_name?: string
-          github_url?: string | null
-          headline?: string
-          id?: string
-          linkedin_url?: string | null
-          twitter_url?: string | null
-          updated_at?: string | null
-          website_url?: string | null
+          status?: string
+          user_id?: string
         }
         Relationships: []
       }
-      projects: {
+      products: {
         Row: {
-          category: string
-          created_at: string | null
-          description: string
-          github_url: string | null
-          id: string
-          is_featured: boolean | null
-          live_url: string | null
-          sort_order: number | null
-          tech_stack: string[]
-          thumbnail_url: string | null
-          title: string
-          updated_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          category: string
-          created_at?: string | null
-          description: string
-          github_url?: string | null
-          id?: string
-          is_featured?: boolean | null
-          live_url?: string | null
-          sort_order?: number | null
-          tech_stack: string[]
-          thumbnail_url?: string | null
-          title: string
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          category?: string
-          created_at?: string | null
-          description?: string
-          github_url?: string | null
-          id?: string
-          is_featured?: boolean | null
-          live_url?: string | null
-          sort_order?: number | null
-          tech_stack?: string[]
-          thumbnail_url?: string | null
-          title?: string
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "projects_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      skills: {
-        Row: {
-          category: string
-          created_at: string | null
+          created_at: string
           id: string
           name: string
-          proficiency: number
-          sort_order: number | null
-          user_id: string | null
+          price: number
+          stock: number
+          user_id: string
         }
         Insert: {
-          category: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           name: string
-          proficiency: number
-          sort_order?: number | null
-          user_id?: string | null
+          price: number
+          stock?: number
+          user_id: string
         }
         Update: {
-          category?: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           name?: string
-          proficiency?: number
-          sort_order?: number | null
-          user_id?: string | null
+          price?: number
+          stock?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sales: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string
+          quantity: number
+          total_amount: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id: string
+          quantity: number
+          total_amount: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string
+          quantity?: number
+          total_amount?: number
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "skills_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "sales_product_id_fkey"
+            columns: ["product_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]
