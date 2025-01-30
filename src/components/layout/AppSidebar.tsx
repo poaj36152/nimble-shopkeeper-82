@@ -1,51 +1,64 @@
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useSidebar } from "@/components/ui/sidebar";
+import { useAuth } from "@/contexts/AuthContext";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { Home, Package, DollarSign, Users, BarChart } from "lucide-react";
+  Package,
+  DollarSign,
+  Users,
+  BarChart,
+  Menu,
+  LogOut
+} from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const menuItems = [
-  { title: "Dashboard", icon: Home, path: "/" },
-  { title: "Products", icon: Package, path: "/products" },
-  { title: "Sales", icon: DollarSign, path: "/sales" },
-  { title: "Debts", icon: Users, path: "/debts" },
-  { title: "Reports", icon: BarChart, path: "/reports" },
+  { icon: Package, label: "Products", href: "/products" },
+  { icon: DollarSign, label: "Sales", href: "/sales" },
+  { icon: Users, label: "Debts", href: "/debts" },
+  { icon: BarChart, label: "Reports", href: "/reports" },
 ];
 
 export function AppSidebar() {
-  const location = useLocation();
+  const { collapsed, toggle } = useSidebar();
+  const { pathname } = useLocation();
+  const { signOut } = useAuth();
 
   return (
-    <Sidebar>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>DukaManager</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    className={location.pathname === item.path ? "bg-secondary/10" : ""}
-                  >
-                    <Link to={item.path} className="flex items-center gap-2">
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+    <aside
+      className={cn(
+        "border-r bg-background/80 backdrop-blur-xl transition-all duration-300 ease-in-out",
+        collapsed ? "w-[70px]" : "w-[240px]"
+      )}
+    >
+      <div className="flex h-[60px] items-center border-b px-4">
+        <Button variant="ghost" size="icon" onClick={toggle}>
+          <Menu className="h-4 w-4" />
+        </Button>
+      </div>
+      <nav className="flex flex-col gap-2 p-4">
+        {menuItems.map(({ icon: Icon, label, href }) => (
+          <Link
+            key={href}
+            to={href}
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all hover:bg-accent",
+              pathname === href ? "bg-accent" : "transparent"
+            )}
+          >
+            <Icon className="h-4 w-4" />
+            {!collapsed && <span>{label}</span>}
+          </Link>
+        ))}
+        <Button
+          variant="ghost"
+          className="flex items-center gap-3 justify-start"
+          onClick={() => signOut()}
+        >
+          <LogOut className="h-4 w-4" />
+          {!collapsed && <span>Logout</span>}
+        </Button>
+      </nav>
+    </aside>
   );
 }

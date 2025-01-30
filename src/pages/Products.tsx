@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Package, Search, Plus } from "lucide-react";
-import { useState } from "react";
+import { Package, Search, Plus, Trash2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -48,6 +48,25 @@ export default function Products() {
     },
     onError: (error) => {
       toast.error('Failed to add product: ' + error.message);
+    },
+  });
+
+  const deleteProductMutation = useMutation({
+    mutationFn: async (productId: string) => {
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', productId)
+        .eq('user_id', user?.id);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast.success('Product deleted successfully');
+    },
+    onError: (error) => {
+      toast.error('Failed to delete product: ' + error.message);
     },
   });
 
@@ -144,7 +163,16 @@ export default function Products() {
                 <CardTitle className="text-sm font-medium">
                   {product.name}
                 </CardTitle>
-                <Package className="h-4 w-4 text-muted-foreground" />
+                <div className="flex items-center gap-2">
+                  <Package className="h-4 w-4 text-muted-foreground" />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => deleteProductMutation.mutate(product.id)}
+                  >
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">${product.price}</div>
