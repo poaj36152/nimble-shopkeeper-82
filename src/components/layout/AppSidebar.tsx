@@ -8,9 +8,10 @@ import {
   Users,
   BarChart,
   Menu,
-  LogOut
+  LogOut,
+  User
 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const menuItems = [
   { icon: Package, label: "Products", href: "/products" },
@@ -22,12 +23,18 @@ const menuItems = [
 export function AppSidebar() {
   const { collapsed, toggle } = useSidebar();
   const { pathname } = useLocation();
-  const { signOut } = useAuth();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/landing');
+  };
 
   return (
     <aside
       className={cn(
-        "border-r bg-background/80 backdrop-blur-xl transition-all duration-300 ease-in-out",
+        "border-r bg-background/80 backdrop-blur-xl transition-all duration-300 ease-in-out flex flex-col h-screen",
         collapsed ? "w-[70px]" : "w-[240px]"
       )}
     >
@@ -36,7 +43,8 @@ export function AppSidebar() {
           <Menu className="h-4 w-4" />
         </Button>
       </div>
-      <nav className="flex flex-col gap-2 p-4">
+
+      <nav className="flex flex-col gap-2 p-4 flex-1">
         {menuItems.map(({ icon: Icon, label, href }) => (
           <Link
             key={href}
@@ -50,15 +58,22 @@ export function AppSidebar() {
             {!collapsed && <span>{label}</span>}
           </Link>
         ))}
+      </nav>
+
+      <div className="p-4 border-t">
+        <div className="flex items-center gap-3 px-3 py-2 text-sm">
+          <User className="h-4 w-4" />
+          {!collapsed && <span className="truncate">{user?.email}</span>}
+        </div>
         <Button
           variant="ghost"
-          className="flex items-center gap-3 justify-start"
-          onClick={() => signOut()}
+          className="w-full flex items-center gap-3 justify-start mt-2"
+          onClick={handleSignOut}
         >
           <LogOut className="h-4 w-4" />
           {!collapsed && <span>Logout</span>}
         </Button>
-      </nav>
+      </div>
     </aside>
   );
 }

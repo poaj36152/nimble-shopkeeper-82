@@ -36,12 +36,12 @@ const Index = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('sales')
-        .select('*')
+        .select('*, products(*)')
         .eq('user_id', user?.id)
         .gte('created_at', today);
       
       if (error) throw error;
-      return data as Sale[];
+      return data as (Sale & { products: Product })[];
     },
     enabled: !!user?.id,
   });
@@ -117,7 +117,7 @@ const Index = () => {
             <div className="space-y-4">
               {todaySales.slice(0, 5).map((sale) => (
                 <div key={sale.id} className="flex justify-between items-center">
-                  <span>Product ID: {sale.product_id}</span>
+                  <span>{sale.products.name}</span>
                   <span className="font-semibold">${sale.total_amount}</span>
                 </div>
               ))}

@@ -14,7 +14,14 @@ import Sales from "./pages/Sales";
 import Debts from "./pages/Debts";
 import Reports from "./pages/Reports";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -24,7 +31,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
   
   if (!user) {
-    return <Navigate to="/landing" />;
+    return <Navigate to="/landing" replace />;
   }
 
   return <>{children}</>;

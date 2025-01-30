@@ -16,6 +16,7 @@ export type Database = {
           customer_name: string
           due_date: string
           id: string
+          phone_number: string | null
           status: string
           user_id: string
         }
@@ -25,6 +26,7 @@ export type Database = {
           customer_name: string
           due_date: string
           id?: string
+          phone_number?: string | null
           status: string
           user_id: string
         }
@@ -34,6 +36,7 @@ export type Database = {
           customer_name?: string
           due_date?: string
           id?: string
+          phone_number?: string | null
           status?: string
           user_id?: string
         }

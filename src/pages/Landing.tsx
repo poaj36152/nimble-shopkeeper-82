@@ -1,117 +1,60 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card } from '@/components/ui/card';
-import { useToast } from '@/hooks/use-toast';
-import { Loader2, Mail, Lock } from 'lucide-react';
+import SignIn from '@/components/auth/SignIn';
+import SignUp from '@/components/auth/SignUp';
 
 export default function Landing() {
-  const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
-  const navigate = useNavigate();
-  const { toast } = useToast();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      if (isLogin) {
-        await signIn(email, password);
-      } else {
-        await signUp(email, password);
-        toast({
-          title: "Success!",
-          description: "Please check your email to verify your account.",
-        });
-      }
-      navigate('/');
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [showSignIn, setShowSignIn] = useState(true);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900">DukaManager</h1>
-          <p className="mt-2 text-lg text-gray-600">Shop Management System</p>
+    <div className="min-h-screen flex flex-col">
+      {/* Navbar */}
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16 items-center">
+            <div className="flex-shrink-0">
+              <h1 className="text-2xl font-bold text-primary">DukaManager</h1>
+            </div>
+            <div className="hidden sm:flex sm:space-x-8">
+              <Link to="/" className="text-gray-600 hover:text-gray-900">Home</Link>
+              <Link to="#about" className="text-gray-600 hover:text-gray-900">About</Link>
+              <Link to="#contact" className="text-gray-600 hover:text-gray-900">Contact</Link>
+            </div>
+            <div className="flex space-x-4">
+              <Button
+                variant={showSignIn ? "default" : "outline"}
+                onClick={() => setShowSignIn(true)}
+              >
+                Sign In
+              </Button>
+              <Button
+                variant={!showSignIn ? "default" : "outline"}
+                onClick={() => setShowSignIn(false)}
+              >
+                Sign Up
+              </Button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col md:flex-row items-center justify-center px-4 sm:px-6 lg:px-8">
+        {/* Left side - Content */}
+        <div className="w-full md:w-1/2 text-center md:text-left mb-8 md:mb-0 md:pr-8">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Manage Your Shop Efficiently
+          </h2>
+          <p className="text-xl text-gray-600 mb-8">
+            Track inventory, manage sales, and grow your business with DukaManager's comprehensive shop management system.
+          </p>
         </div>
 
-        <Card className="p-6 sm:p-8 shadow-xl">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10"
-                  required
-                />
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {isLogin ? 'Signing in...' : 'Signing up...'}
-                </>
-              ) : (
-                isLogin ? 'Sign In' : 'Sign Up'
-              )}
-            </Button>
-          </form>
-
-          <div className="mt-4 text-center">
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
-            >
-              {isLogin
-                ? "Don't have an account? Sign Up"
-                : "Already have an account? Sign In"}
-            </button>
-          </div>
-        </Card>
+        {/* Right side - Auth Form */}
+        <div className="w-full md:w-1/2 max-w-md">
+          {showSignIn ? <SignIn /> : <SignUp />}
+        </div>
       </div>
     </div>
   );
