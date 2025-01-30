@@ -9,6 +9,10 @@ import { AppSidebar } from "@/components/layout/AppSidebar";
 import Index from "./pages/Index";
 import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
+import Products from "./pages/Products";
+import Sales from "./pages/Sales";
+import Debts from "./pages/Debts";
+import Reports from "./pages/Reports";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +49,10 @@ const App = () => (
                       <main className="flex-1 overflow-y-auto">
                         <Routes>
                           <Route index element={<Index />} />
+                          <Route path="products" element={<Products />} />
+                          <Route path="sales" element={<Sales />} />
+                          <Route path="debts" element={<Debts />} />
+                          <Route path="reports" element={<Reports />} />
                           <Route path="*" element={<NotFound />} />
                         </Routes>
                       </main>
